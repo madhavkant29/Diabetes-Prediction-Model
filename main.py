@@ -95,10 +95,10 @@ joblib.dump(label_encoders, "label_encoders.pkl")
 def predict_new_data(input_data: pd.DataFrame):
     # Encode categorical features using saved encoders
     for col in categorical_columns[:-1]:  # Excluding "class"
-    if col in label_encoders:
-        input_data[col] = input_data[col].apply(
-            lambda x: label_encoders[col].transform([x])[0] if x in label_encoders[col].classes_ else -1
-)
+        if col in label_encoders:
+            input_data[col] = input_data[col].apply(
+                lambda x: label_encoders[col].transform([x])[0] if x in label_encoders[col].classes_ else -1
+            )
     # Scale input data
     input_scaled = scaler.transform(input_data)
 
