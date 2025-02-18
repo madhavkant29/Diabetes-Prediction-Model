@@ -32,6 +32,7 @@ categorical_columns = [
     "Alopecia",
     "Obesity",
     "class",
+    "age"
 ]
 
 for col in categorical_columns:
