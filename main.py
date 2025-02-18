@@ -10,7 +10,7 @@ from sklearn.metrics import (
 )
 import joblib
 
-# Load the data
+# Loading the data
 data = pd.read_csv("data/diabetes.csv")
 
 # Preprocessing
@@ -37,11 +37,11 @@ categorical_columns = [
 for col in categorical_columns:
     data[col] = label_encoder.fit_transform(data[col])
 
-# Splitting data into features and target
+# Splitting data
 X = data.drop("class", axis=1)
 y = data["class"]
 
-# Train-test split
+#into train test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, random_state=42
 )
@@ -56,7 +56,7 @@ poly = PolynomialFeatures(degree=2)
 X_train_poly = poly.fit_transform(X_train_scaled)
 X_test_poly = poly.transform(X_test_scaled)
 
-# Model training using RandomForestClassifier with GridSearchCV
+# training using RandomForestClassifier with GridSearchCV
 param_grid = {
     "n_estimators": [100, 200],
     "max_depth": [10, 20, None],
@@ -68,7 +68,6 @@ grid_search = GridSearchCV(
 )
 grid_search.fit(X_train_poly, y_train)
 
-# Best model from GridSearchCV
 best_model = grid_search.best_estimator_
 
 # Predictions
@@ -78,7 +77,6 @@ y_pred = best_model.predict(X_test_poly)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy}")
 
-# Additional evaluation metrics
 print("Classification Report:\n", classification_report(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 roc_auc = roc_auc_score(y_test, best_model.predict_proba(X_test_poly)[:, 1])
@@ -98,21 +96,13 @@ joblib.dump(poly, "poly.pkl")
 def predict_new_data(input_data: pd.DataFrame):
     # Ensure the input is in the correct format
     input_scaled = scaler.transform(input_data)
-
-    # Apply polynomial features
     input_poly = poly.transform(input_scaled)
-
-    # Predict using the trained model
     prediction = best_model.predict(input_poly)
-
     return prediction
 
-
-# Example usage of prediction with DataFrame
-# Ensure new_data columns match the order of the training data columns
 new_data = pd.DataFrame(
     {
-        "Gender": [0],  # Example values for each feature
+        "Gender": [0], 
         "Polyuria": [1],
         "Polydipsia": [0],
         "sudden weight loss": [1],
@@ -127,11 +117,10 @@ new_data = pd.DataFrame(
         "muscle stiffness": [1],
         "Alopecia": [0],
         "Obesity": [1],
-        "Age": [45],  # Ensure 'Age' is included in the new data
+        "Age": [45]
     }
 )
 
-# Align the new data columns with the training data
 new_data = new_data[X.columns]
 
 prediction = predict_new_data(new_data)
