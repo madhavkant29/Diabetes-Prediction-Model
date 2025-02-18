@@ -12,16 +12,20 @@ Prediction Functionality: The model can be used to predict whether new data corr
 The model achieved the following evaluation results on the test data:
 
 Accuracy: 99.36%
+
 Classification Report:
 Precision: 0.99
 Recall: 0.99
 F1-Score: 0.99
+
 Confusion Matrix:
 True Positives: 101
 False Positives: 0
 False Negatives: 1
 True Negatives: 54
+
 ROC-AUC: 1.0
+
 Cross-validation Score: 96.7%
 
 **Usage**
