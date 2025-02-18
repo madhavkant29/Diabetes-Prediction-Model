@@ -97,7 +97,11 @@ def predict_new_data(input_data: pd.DataFrame):
     for col in categorical_columns[:-1]:  # Excluding "class"
         if col in label_encoders:
             input_data[col] = input_data[col].apply(
-                lambda x: label_encoders[col].transform([x])[0] if x in label_encoders[col].classes_ else -1
+                lambda x: (
+                    label_encoders[col].transform([x])[0]
+                    if x in label_encoders[col].classes_
+                    else -1
+                )
             )
     # Scale input data
     input_scaled = scaler.transform(input_data)
@@ -124,8 +128,8 @@ new_data = pd.DataFrame(
         "partial paresis": ["No"],
         "muscle stiffness": ["Yes"],
         "Alopecia": ["No"],
-        "Obesity": ["Yes"],
-        "Age": [45],
+        "Obesity": ["No"],
+        "Age": [35],
     }
 )
 
