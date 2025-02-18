@@ -77,12 +77,8 @@ print(f"Accuracy: {accuracy}")
 print("Classification Report:\n", classification_report(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 
-# Handle multi-class case for ROC-AUC
-if len(set(y)) > 2:
-    roc_auc = roc_auc_score(y_test, best_model.predict_proba(X_test_scaled), multi_class="ovr")
-else:
-    roc_auc = roc_auc_score(y_test, best_model.predict_proba(X_test_scaled)[:, 1])
-    
+# Binary ROC-AUC
+roc_auc = roc_auc_score(y_test, best_model.predict_proba(X_test_scaled)[:, 1])
 print(f"ROC-AUC: {roc_auc}")
 
 # Cross-validation score
@@ -99,17 +95,22 @@ joblib.dump(label_encoders, "label_encoders.pkl")
 def predict_new_data(input_data: pd.DataFrame):
     # Encode categorical features using saved encoders
     for col in categorical_columns[:-1]:  # Excluding "class"
-        input_data[col] = label_encoders[col].transform(input_data[col])
+        if col in label_encoders:
+            input_data[col] = input_data[col].map(
+                lambda x: label_encoders[col].classes_.tolist().index(x)
+                if x in label_encoders[col].classes_
+                else -1
+            )  # Assign -1 to unseen categories
 
     # Scale input data
     input_scaled = scaler.transform(input_data)
-    
+
     # Make prediction
     prediction = best_model.predict(input_scaled)
     return prediction
 
 
-# new test data
+# New test data
 new_data = pd.DataFrame(
     {
         "Gender": ["Male"],
@@ -127,7 +128,7 @@ new_data = pd.DataFrame(
         "muscle stiffness": ["Yes"],
         "Alopecia": ["No"],
         "Obesity": ["Yes"],
-        "Age": [45]
+        "Age": [45],
     }
 )
 
