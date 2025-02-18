@@ -32,7 +32,7 @@ Cross-validation Score: 96.7%
 To use the trained model for making predictions:
 
 Ensure that you have the necessary dependencies installed (see the requirements.txt below).
-Load the trained model, scaler, and polynomial transformer from their saved files.
+Load the trained model, scaler from their saved files.
 Prepare the new input data by encoding and scaling it in the same way as the training data.
 Use the model to make predictions on the new data.
 
@@ -41,6 +41,6 @@ To train the model, simply run the Python script, which will:
 
 Load the data, preprocess it, and train the model.
 Evaluate the model on test data and print the evaluation metrics.
-Save the trained model and related objects (scaler, polynomial features) for future use.
+Save the trained model and related object (scaler) for future use.
 To make predictions, you can load the saved model and apply it to new data.
 
